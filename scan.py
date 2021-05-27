@@ -75,7 +75,6 @@ while True:
     except IndexError:
         break
 
-
 f = open('readme.md', 'w')
 f.write(filedata)
 f = open('readme.md', 'r')
