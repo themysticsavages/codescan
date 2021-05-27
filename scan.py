@@ -4,41 +4,35 @@ import sys
 import os
 
 local = '\\'.join(__file__.split('\\')[0:-1])
+file = sys.argv[1]
 os.chdir(local)
 
-with open(sys.argv[1], 'r') as fh0:
-    text = fh0.readlines()
-fh0.close()
+with open(file, 'r') as fh:
+    data = fh.read()
+fh.close()
+with open('readme_temp.md', 'w') as fh:
+    fh.write(data)
+fh.close()
+with open('readme_temp.md', 'r') as fh:
+    lines = fh.readlines()
+fh.close()
 
-text = list(filter(('```').__ne__, text))
+linstrs = ''.join(lines).split('code')
+linstrs = str(linstrs).replace('[', '').replace(']', '').split('```')
+os.remove('readme_temp.md')
 
-fh1 = open('output.py', 'w')
-ctext = []
-i = 0
+code = str(linstrs[1])
+print(code)
 
-
-for string in text:
-    nan = string.replace('```', '```\n')
-    ctext.append(nan)
-
-for texts in ctext:
-        fh1.write(ctext[i])
-        i += 1
-fh1.close()
-
-with open('output.py', 'r') as fh2:
-    filedata = fh2.read()
-filedata = filedata.replace('```', '').replace('\n\n', '\n')
-with open('output.py', 'w') as fh3:
-    fh3.write(filedata)
-fh3.close()
-fh2.close()
-with open('output.py', 'r') as fh4:
-    text1 = fh4.readlines()
-fh4.close()
-
-ttexts = ''
-ttexts = ttexts.join(text1).split('\n\n')
+with open('output_temp.py', 'w') as fh:
+    fh.write(code)
+fh.close()
+with open('output_temp.py', 'r') as fh:
+    lines = fh.read()
+lines = lines.replace('\\n', '\n')
+with open('output_temp.py', 'w') as fh:
+    fh.write(lines)
+fh.close()
 
 def codescan(file):
     process = subprocess.Popen([sys.executable, file], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -47,37 +41,10 @@ def codescan(file):
 
     return(string)
 
-i = 0
-returns = []
-
-for texts in ttexts:
-    if 'output' in ttexts[i]:
-        pass
-    else:
-        fh5 = open('output.py', 'w').write(ttexts[i])
-        if codescan('output.py') == '':
-            print('(no output provided)')
-        else:
-            print(codescan('output.py'))
-            returns.append(codescan('output.py'))
-    i += 1
-
-i = 0
-
-f = open('readme.md', 'r')
-filedata = f.read()
-f.close()
-
-while True:
-    try:
-        filedata = filedata.replace('output'+str(i), 'output: '+str(returns[i]))
-        i += 1
-    except IndexError:
-        break
-
-f = open('readme.md', 'w')
-f.write(filedata)
-f = open('readme.md', 'r')
-filedata = f.read()
-
-os.remove('output.py')
+with open(file, 'r') as fh:
+    data = fh.read()
+data = data.replace('output', 'output: '+codescan('output_temp.py'))
+with open('readme.md', 'w') as fh:
+    fh.write(data)
+fh.close()
+os.remove('output_temp.py')
