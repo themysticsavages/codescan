@@ -1,15 +1,6 @@
+# codescan 
+Codescan (not the Github feature) can automatically generate output to Python code availible in a README! This can especially helpful if you don't want to get the output yourself. Just make sure you're code is in
 ```
-print('hello world')
+print('this format and you have an incremental text named 'output0' below!')
 ```
-output: hello world
-```
-print("it does work, yay! let's try some other stuff, like making files.")
-import os
-
-local = '\\'.join(__file__.split('\\')[0:-1])
-os.chdir(local)
-
-print(os.listdir())
-```
-output: it does work, yay! let's try some other stuff, like making files.
-['output.py', 'readme.md', 'scan.py']
+output0
